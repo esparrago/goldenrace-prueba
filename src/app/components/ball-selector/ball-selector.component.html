@@ -1,0 +1,20 @@
+<div class="selector-container">
+    <form [formGroup]="selectorForm" novalidate>
+        <h3 class="fw-bold">1. Selecciona un número</h3>
+        <div class="d-flex ball-options">
+            <div *ngFor="let option of optionsArr" class="ball-option">
+                <img src="../../../assets/img/balls/{{option}}.png" alt="{{option}}" (click)="getSelectedBall(option)">
+            </div>
+            <input id="ball-selected" type="text" formControlName="ball" autocomplete="off" style="display: none;">
+        </div>
+
+        <h3 class="fw-bold">2. Coloca tu apuesta <span>(apuesta mínima 5€)</span></h3>
+        <div class="bet-options">
+            <div class="input-group">
+                <input id="user-bet" type="text" formControlName="bet" autocomplete="off">
+            </div>
+        </div>
+    </form>
+    
+    <button type="button" class="btn btn-secondary btn-lg" [disabled]="selectorForm.invalid" (click)="start()">¡Empezar!</button>
+</div>

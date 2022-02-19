@@ -1,0 +1,31 @@
+.canvas-container {
+    text-align: center;
+    position: relative;
+    .circle-background {
+        position: absolute;
+        background-color: bisque;
+        width: 480px;
+        height: 480px;
+        z-index: 1;
+        left: 0;
+        right: 0;
+        margin: auto;
+        border-radius: 50%;
+    }
+    canvas {
+        position: relative;
+        display: block;
+        margin: auto;
+        background-image: url(../../../assets/img/crystal-globe.png);
+        background-size: 335px 335px !important;
+        background-repeat: no-repeat;
+        background-position: center center;
+        z-index: 3;
+    }
+    img {
+        position: relative;
+        margin-top: -60px;
+        z-index: 2;
+        max-width: 380px;
+    }
+}

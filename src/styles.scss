@@ -1,15 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
-//first theming boostrap
+
+// Required
+@import "../node_modules/bootstrap/scss/functions";
+
+// Default variable overrides
+$body-bg: #051f3d;
+$body-color: whitesmoke;
+
+// Required
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/root";
+
+// Optional Bootstrap components here
+@import "../node_modules/bootstrap/scss/reboot";
+@import "../node_modules/bootstrap/scss/type";
+
+
+
 
 
 //Shared Styles
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Rubik', sans-serif;
+    //background-color: #283845 !important;
 }
-
 
 .padding-tb-80 {
     padding-top: 80px;
     padding-bottom: 80px;
+}
+
+.bolder {
+    font-weight: 900;
 }
