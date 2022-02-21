@@ -12,10 +12,10 @@ export class BallSelectorComponent implements OnInit {
 
   optionsNumber: number = 10; //number of ball options
   optionsArr: Array<any>;
-  selectorForm: FormGroup;
+  selectorForm = new FormGroup({});
 
   constructor( private fb: FormBuilder, private sdService: SharedDataService) {
-    //Fill array with optionsNumber number of options for ngFor
+    //Fill array with [optionsNumber] number of options for [ngFor]
     this.optionsArr = Array(this.optionsNumber).fill(null).map((x,i)=>i+1);
     
     //Create Selector Form
@@ -30,7 +30,8 @@ export class BallSelectorComponent implements OnInit {
     this.selectorForm.valueChanges.subscribe((val:any) => {
       this.sendData();
     });
-
+    
+    //Create subscription to reset   
     const resetSuscription = this.sdService.resetGame.subscribe( (reset:boolean) => {
       if (!reset) return;
       this.reset();
@@ -48,6 +49,7 @@ export class BallSelectorComponent implements OnInit {
     this.sdService.betFormData.next(data);
   }
 
+  //Set value of selection to hidden input
   getSelectedBall(ball:number){
     this.selectorForm.controls["ball"].setValue(ball);
   }

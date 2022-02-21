@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {randomInt} from 'mathjs';
 
 @Component({
   selector: 'app-home-page',
@@ -8,17 +7,17 @@ import {randomInt} from 'mathjs';
 })
 export class HomePageComponent implements OnInit {
 
-  startAnimation:boolean = false
+  startAnimation:boolean;
 
-  constructor() { }
+  constructor() {
+    this.startAnimation = false;
+  }
 
   ngOnInit(): void {
-    const randomNum = randomInt(1,11);
-    console.log(randomNum);
+
   }
 
   start(started:boolean){
-    console.log("home bien");
     this.startAnimation = started;
   }
 

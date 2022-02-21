@@ -3,7 +3,7 @@
         <h3 class="fw-bold">Selecciona una balota</h3>
         <div class="d-flex ball-options">
             <div *ngFor="let option of optionsArr" class="ball-option">
-                <img src="../../../assets/img/balls/{{option}}.png" alt="{{option}}" [class.active]="option == selectorForm.controls['ball'].value" (click)="getSelectedBall(option)">
+                <img src="./assets/img/balls/{{option}}.png" alt="{{option}}" [class.active]="option == selectorForm.controls['ball'].value" (click)="getSelectedBall(option)">
             </div>
             <input id="ball-selected" type="text" formControlName="ball" autocomplete="off" style="display: none;">
         </div>

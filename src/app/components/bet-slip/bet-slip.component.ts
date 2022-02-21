@@ -17,11 +17,11 @@ export class BetSlipComponent implements OnInit {
   subscription: Subscription;
 
   constructor(private sdService: SharedDataService) {
-    this.betData = {
-      bet: "5",
-      ball: "",
+    this.betData = { 
+      bet: "5", 
+      ball: "", 
       valid: false
-    }
+    };
 
     this.subscription = this.sdService.betFormData.subscribe(data => {
       this.betData = data; 
@@ -29,11 +29,7 @@ export class BetSlipComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
-  }
 
-  initialize() {
-    
   }
 
   start() {
@@ -42,7 +38,8 @@ export class BetSlipComponent implements OnInit {
     this.subscription.unsubscribe();
     this.sdService.getRandomInt();
     this.started.emit(true);
-
+    
+    //Create subscription to reset 
     const resetSuscription = this.sdService.resetGame.subscribe( (reset:boolean) => {
       if (!reset) return;
       this.reset();

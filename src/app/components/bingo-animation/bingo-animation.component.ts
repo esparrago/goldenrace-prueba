@@ -44,7 +44,6 @@ export class BingoAnimationComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     if (changes['startAnimation'].currentValue == true) {
       this.startBlow();
     }
@@ -86,7 +85,7 @@ export class BingoAnimationComponent implements OnInit {
         restitution: 1.03,
         render: {
           sprite: {
-            texture: `../../assets/img/balls/${ n }.png `,
+            texture: `~src/assets/img/balls/${ n }.png `,
             xScale:0.5, 
             yScale:0.5
           }
@@ -99,9 +98,7 @@ export class BingoAnimationComponent implements OnInit {
   }
 
   startBlow(){
-
     const ballResult = this.sdService.ballResult.value;
-    console.log(ballResult);
 
     //Change img to lights on
     this.baseOn = true;
@@ -114,7 +111,6 @@ export class BingoAnimationComponent implements OnInit {
     //Wait 1sec to start removing balls every 0.5sec  
     setTimeout(() => {
       const interval = setInterval(()=> {
-        console.log(count);
         if(count+1 !== ballResult) {
           World.remove(this.engine.world,this.balls[count]);
           this.balls[count] = null;
@@ -129,7 +125,8 @@ export class BingoAnimationComponent implements OnInit {
     setTimeout(() => {
       Events.off(this.runner, 'tick', this.animationEvent);
       this.sdService.animationEnded.next(true);
-      
+
+      //Create subscription to reset 
       const suscription = this.sdService.resetGame.subscribe( (reset:boolean) => {
         if (!reset) return;
         this.reset(ballResult);
@@ -162,12 +159,10 @@ export class BingoAnimationComponent implements OnInit {
   }
 
   stopAirBlow(){
-    console.log("stop");
     Events.off(this.runner, 'tick', this.animationEvent);
   }
 
   reset(ball:number) {
-    console.log(this.balls);
     World.remove(this.engine.world,this.balls[ball-1]);
     
     //clear balls array

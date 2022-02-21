@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+
 
 import { BetSlipComponent } from './bet-slip.component';
 
@@ -21,5 +22,12 @@ describe('BetSlipComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should emit start = true', () => {
+    spyOn(component.started, 'emit');
+    component.start();
+    expect(component.started.emit).toHaveBeenCalledWith(true);
+
   });
 });

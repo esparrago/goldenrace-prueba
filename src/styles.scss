@@ -11,19 +11,15 @@ $body-color: whitesmoke;
 @import "../node_modules/bootstrap/scss/mixins";
 @import "../node_modules/bootstrap/scss/root";
 
-// Optional Bootstrap components here
+// Optional
 @import "../node_modules/bootstrap/scss/reboot";
 @import "../node_modules/bootstrap/scss/type";
-
-
-
 
 
 //Shared Styles
 
 body {
     font-family: 'Rubik', sans-serif;
-    //background-color: #283845 !important;
 }
 
 .padding-tb-80 {

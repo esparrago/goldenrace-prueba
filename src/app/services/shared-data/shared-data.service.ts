@@ -26,8 +26,9 @@ export class SharedDataService {
   }
 
   getRandomInt(){
-    const randomNum = randomInt(1,11);
+    const randomNum = randomInt(1,11);//Range 1 - (10 + 1) 
     this.ballResult.next(randomNum);
+    return randomNum;
   }
 
 }

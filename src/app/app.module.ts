@@ -9,11 +9,10 @@ import { AppComponent } from './app.component';
 import { HomePageComponent } from './components/pages/home-page/home-page.component';
 import { BingoAnimationComponent } from './components/bingo-animation/bingo-animation.component';
 import { BallSelectorComponent } from './components/ball-selector/ball-selector.component';
-
-//Services
-import { AudioService } from './services/audio/audio.service';
 import { BetSlipComponent } from './components/bet-slip/bet-slip.component';
 import { ResultsComponent } from './components/results/results.component';
+import { SharedDataService } from './services/shared-data/shared-data.service';
+
 
 @NgModule({
   declarations: [
@@ -31,7 +30,7 @@ import { ResultsComponent } from './components/results/results.component';
     ReactiveFormsModule
   ],
   providers: [
-    AudioService
+    SharedDataService
   ],
   bootstrap: [AppComponent]
 })

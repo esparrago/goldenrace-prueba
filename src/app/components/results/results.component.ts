@@ -32,10 +32,12 @@ export class ResultsComponent implements OnInit {
       this.ball = this.sdService.ballResult.value;
       if (ended !== true) return;
       
+      //Wait 1sec to ball stop 
       setTimeout(() => {
         this.showResults = true;
       }, 1000);
 
+      //Wait 0.3sec more to modal animation 
       setTimeout(() => {
         this.showModal();
       }, 1300);
