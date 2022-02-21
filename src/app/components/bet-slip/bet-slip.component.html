@@ -1,5 +1,8 @@
 <div class="bet-slip-container">
     <h3>Balota elegida:</h3>
-    <img src="../../../assets/img/balls/{{betData.ball || 'ball'}}.png" alt="">
-    <h3>Apuesta: <span>{{betData.bet || "5"}}€</span></h3>
+    <img [class.inactive]="!betData.ball" src="../../../assets/img/balls/{{betData.ball || 'ball'}}.png" alt="">
+    <h3>Apuesta: <span>{{betData.bet || "0"}}€</span></h3>
 </div>
+
+<div *ngIf="!betData.valid" class="start-button inactive">Llena los campos</div>
+<div *ngIf="betData.valid" class="start-button active" (click)="start()"><div>¡Empezar!</div></div>

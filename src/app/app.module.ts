@@ -13,6 +13,7 @@ import { BallSelectorComponent } from './components/ball-selector/ball-selector.
 //Services
 import { AudioService } from './services/audio/audio.service';
 import { BetSlipComponent } from './components/bet-slip/bet-slip.component';
+import { ResultsComponent } from './components/results/results.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { BetSlipComponent } from './components/bet-slip/bet-slip.component';
     HomePageComponent,
     BingoAnimationComponent,
     BallSelectorComponent,
-    BetSlipComponent
+    BetSlipComponent,
+    ResultsComponent
   ],
   imports: [
     BrowserModule,

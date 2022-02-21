@@ -1,0 +1,17 @@
+<div [hidden]="!showResults" class="results-container">
+<!-- <div class="results-container"> -->
+    <div class="custom-modal show" [class.show]="result">
+    <!-- <div class="custom-modal show"> -->
+        <img class="result-ball" src="../../../assets/img/balls/{{ball|| 'ball'}}.png" alt="">
+        <div [hidden]="result == 'lose'">
+            <h1 class="text-center fw-bold">⭐¡Ganaste!⭐</h1>
+            <p class="text-center">Tu apuesta fue de <span>{{bet}}€</span>, Ganaste {{earnings}}€ 💶</p>
+            <p class="text-center">Prueba de nuevo tu suerte...</p>
+        </div>
+        <div [hidden]="result == 'win'">
+            <h1 class="text-center fw-bold">❌¡Perdiste!❌</h1>
+            <p class="text-center">Prueba de nuevo tu suerte...</p>
+        </div>
+        <button type="button" class="btn btn-outline-light btn-lg try-again-btn" (click)="resetGame()">Intentar de nuevo</button>
+    </div>
+</div>

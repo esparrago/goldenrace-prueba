@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, SimpleChanges} from '@angular/core';
+import { SharedDataService } from 'src/app/services/shared-data/shared-data.service';
 import { Engine, Render, World, Bodies, Body, Runner, Events} from 'matter-js';
+import { boolean } from 'mathjs';
 
 @Component({
   selector: 'app-bingo-animation',
@@ -7,30 +9,38 @@ import { Engine, Render, World, Bodies, Body, Runner, Events} from 'matter-js';
   styleUrls: ['./bingo-animation.component.scss']
 })
 export class BingoAnimationComponent implements OnInit {
-
+  
   //General Options
-  BALLS_COUNT  : number = 10;
-  BALL_RADIUS  : number = 20;
-  CANVAS_WIDTH : number = 380;
-  CANVAS_HEIGHT: number = 380;
+  ballotNumber : number;
+  ballotRadius : number;
+  canvasWidth  : number;
+  canvasHeight : number;
 
   //Component Variables
-  engine = Engine.create();
-  runner = Runner.run(this.engine);
+  engine: any;
+  runner: any;
   render: any;
-  balls : any = [];
+  balls : any;
   animationEvent: any;
   canvasElement: any;
-  baseOn: boolean = false;
+  baseOn: boolean;
 
-  @Input() startAnimation:boolean = false;
+  @Input() startAnimation:boolean;
 
-  constructor() {
-    
+  constructor(private sdService:SharedDataService) {
+    this.ballotNumber = 10;
+    this.ballotRadius = 20;
+    this.canvasWidth  = 380;
+    this.canvasHeight = 380;
+    this.engine = Engine.create();
+    this.runner = Runner.run(this.engine);
+    this.balls  = [];
+    this.baseOn = false;
+    this.startAnimation = false;
   }
 
   ngOnInit(): void {
-   this.initialize();
+    this.initialize();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -43,27 +53,23 @@ export class BingoAnimationComponent implements OnInit {
   initialize() {
     this.canvasElement = document.getElementById("canvas") as HTMLCanvasElement;
     
-    //Create render Matterjs (Constructor is to early to put it there)
+    //Initialize render Matterjs (Constructor is to early for DOM to put it there)
     this.render = Render.create({
       canvas: this.canvasElement,
       engine: this.engine,
       options: {
         wireframes: false,
-        width: this.CANVAS_WIDTH,
-        height: this.CANVAS_HEIGHT,
+        width: this.canvasWidth,
+        height: this.canvasHeight,
         background: 'cover',
       }
     })
 
-    //Wait 0.5 seconds (UX, users ussually don't see inmediatly after load)
-    setTimeout(() => {
-      //Add BALLS_COUNT of balls to the canvas
-      for (let i = 0; i < this.BALLS_COUNT; i++) {
-        World.add(this.engine.world, this.createBall(i+1));
-      }
-    }, 1500);
+    //Add ballotNumber of balls to the canvas
+    for (let i = 0; i < this.ballotNumber; i++) {
+      World.add(this.engine.world, this.createBall(i+1));
+    }
     
-
     //Initialize canvas Matterjs
     Runner.run(this.engine);
     Render.run(this.render);
@@ -74,11 +80,9 @@ export class BingoAnimationComponent implements OnInit {
   //Create Ball
   createBall(n:number) {
     const ball = Bodies.circle(
-      //Positioning every ball 
-      this.render.canvas.width / 2 - this.BALL_RADIUS,
-      this.render.canvas.height / 2 - 2 * this.BALL_RADIUS,
-
-      this.BALL_RADIUS, {
+      this.render.canvas.width / 2 - this.ballotRadius,
+      this.render.canvas.height / 2 - 2 * this.ballotRadius,
+      this.ballotRadius, {
         restitution: 1.03,
         render: {
           sprite: {
@@ -95,38 +99,63 @@ export class BingoAnimationComponent implements OnInit {
   }
 
   startBlow(){
-    //Execute function every tick
-    console.log("start");
+
+    const ballResult = this.sdService.ballResult.value;
+    console.log(ballResult);
+
+    //Change img to lights on
     this.baseOn = true;
-    this.animationEvent = Events.on(this.runner, 'tick', (e) =>this.airBlow())
 
+    //Execute airblow every render's tick
+    this.animationEvent = Events.on(this.runner, 'tick', (e) =>this.airBlow());
+
+    let count = this.ballotNumber - 1;
+    
+    //Wait 1sec to start removing balls every 0.5sec  
     setTimeout(() => {
-      console.log("stop");
+      const interval = setInterval(()=> {
+        console.log(count);
+        if(count+1 !== ballResult) {
+          World.remove(this.engine.world,this.balls[count]);
+          this.balls[count] = null;
+        }
+        if (count == 0) clearInterval(interval);
+        --count;
+      }, 1000)
+    }, 500);
+
+
+    //Stop animation after 10Sec
+    setTimeout(() => {
       Events.off(this.runner, 'tick', this.animationEvent);
+      this.sdService.animationEnded.next(true);
+      
+      const suscription = this.sdService.resetGame.subscribe( (reset:boolean) => {
+        if (!reset) return;
+        this.reset(ballResult);
+        suscription.unsubscribe();
+      });
     }, 10000);
 
-    setTimeout(() => {
-      World.remove(this.engine.world,this.balls[2]);
-    }, 10000);
+    
   }
 
-  //Simulate "air blow". Depending of the location of the ball, apply force to simulate air blowing using Matterjs; 
+  //Simulate "air blow", apply force to simulate air blowing using Matterjs; 
   airBlow() {
-    console.log('airBlow');
-    const force = 0.008;
+    const force = 0.010;
     this.balls.forEach((ball:any) => {
-      if (ball.position.y >= this.render.canvas.height - 100) {
+      if (ball?.position.y >= this.render.canvas.height - 100) {
         Body.applyForce(ball, { x: ball.position.x, y: ball.position.y }, { x: force*1.5, y: -force })
       }
-      if (ball.position.y < 120) {
+      if (ball?.position.y < 120) {
         Body.applyForce(ball, { x: ball.position.x, y: ball.position.y }, { x: -force, y: force })
       }
 
-      if (ball.position.x < 80) {
+      if (ball?.position.x < 80) {
         Body.applyForce(ball, { x: ball.position.x, y: ball.position.y }, { x: force, y: -force })
       }
 
-      if (ball.position.x > this.render.canvas.width - 80) {
+      if (ball?.position.x > this.render.canvas.width - 80) {
         Body.applyForce(ball, { x: ball.position.x, y: ball.position.y }, { x: -force, y: force })
       }
     })
@@ -135,6 +164,21 @@ export class BingoAnimationComponent implements OnInit {
   stopAirBlow(){
     console.log("stop");
     Events.off(this.runner, 'tick', this.animationEvent);
+  }
+
+  reset(ball:number) {
+    console.log(this.balls);
+    World.remove(this.engine.world,this.balls[ball-1]);
+    
+    //clear balls array
+    this.balls = [];
+    
+    //Change img to lights off
+    this.baseOn = false;
+
+    for (let i = 0; i < this.ballotNumber; i++) {
+      World.add(this.engine.world, this.createBall(i+1));
+    }
   }
 
   //add rect body to canvas
@@ -151,8 +195,8 @@ export class BingoAnimationComponent implements OnInit {
 
   //Add bounds to balls to collision, for this we have to make a mesh of rects forming a circle
   addBounds() {
-    const sW = this.CANVAS_WIDTH
-    const sH = this.CANVAS_WIDTH
+    const sW = this.canvasWidth
+    const sH = this.canvasHeight
     const m = Math.min(sW, sH)
     const rat = 1 / 4.5 * 2
     const r = m * rat
